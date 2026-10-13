@@ -45,7 +45,7 @@ function setupApiDocs(app: INestApplication, config: AppConfigService): void {
   const document = SwaggerModule.createDocument(
     app,
     new DocumentBuilder()
-      .setTitle('Ligo Backend Challenge')
+      .setTitle('Wallet Cash-In')
       .setDescription(
         'Send `x-trace-id` to follow a request through the logs.',
       )
@@ -58,7 +58,7 @@ function setupApiDocs(app: INestApplication, config: AppConfigService): void {
     '/reference',
     apiReference({
       content: document,
-      pageTitle: 'Ligo Backend Challenge API',
+      pageTitle: 'Wallet Cash-In API',
     }),
   );
 }

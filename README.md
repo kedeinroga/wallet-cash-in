@@ -1,4 +1,4 @@
-# Ligo Backend Challenge: Wallet Cash-In
+# Wallet Cash-In
 
 Top up a wallet balance through an external payment provider, without ever charging or crediting twice: across client retries, several pods, provider timeouts and duplicated or out of order webhooks.
 
@@ -6,7 +6,7 @@ NestJS service built with **DDD** and **CQRS** (`@nestjs/cqrs`) on **MongoDB**.
 
 ## Problem and assumptions
 
-Ligo's app tops up a user's wallet by charging an external payment provider. This service exposes `POST /cash-in` (charges the provider and credits the wallet) and `POST /webhooks/payment` (the provider's asynchronous notifications). The hard part is the guarantee: **a user is charged at most once and credited exactly once per operation**, under double clicks, automatic retries, several pods receiving the same request, provider timeouts (the charge outcome is unknown), duplicated or out of order webhooks, webhooks that arrive before the API answered, temporary database failures, restarts in the middle of an operation and concurrent credits to one balance.
+A digital wallet app tops up a user's wallet by charging an external payment provider. This service exposes `POST /cash-in` (charges the provider and credits the wallet) and `POST /webhooks/payment` (the provider's asynchronous notifications). The hard part is the guarantee: **a user is charged at most once and credited exactly once per operation**, under double clicks, automatic retries, several pods receiving the same request, provider timeouts (the charge outcome is unknown), duplicated or out of order webhooks, webhooks that arrive before the API answered, temporary database failures, restarts in the middle of an operation and concurrent credits to one balance.
 
 The central question of the statement is: the provider charges S/100, a timeout happens before it answers, the client retries. How do you avoid charging twice? The short answer: the operation is persisted (unique per user and `Idempotency-Key`) **before** the provider is called, our operation id is the provider's idempotency key, an unknown outcome leaves the operation `pending` (the key is never released), and the retry, the webhook or the reconciler resolve it by re-submitting the same idempotent charge or applying the notification, with a single transactional credit.
 
@@ -317,7 +317,7 @@ KEY=$(uuidgen)
 BODY='{"user_id":"usr_abc123","amount":100.00,"currency":"PEN","payment_method":"card_slow"}'
 seq 5 | xargs -P5 -I{} curl -s -X POST localhost:3000/cash-in -H 'Content-Type: application/json' -H "Idempotency-Key: $KEY" -d "$BODY"; echo
 # one 200 and four 202, all with the same operation_id
-docker compose exec -T mongo mongosh --quiet ligo --eval 'printjson(db.simulated_provider_charges.find({}, {calls: 1}).sort({createdAt: -1}).limit(1).toArray())'
+docker compose exec -T mongo mongosh --quiet wallet --eval 'printjson(db.simulated_provider_charges.find({}, {calls: 1}).sort({createdAt: -1}).limit(1).toArray())'
 # calls: 1  (the provider was called once)
 ```
 

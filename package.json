@@ -1,5 +1,5 @@
 {
-  "name": "ligo-backend-challenge",
+  "name": "wallet-cash-in",
   "version": "0.0.1",
   "description": "Wallet Cash-In service: idempotent top ups through an external payment provider (NestJS, DDD, CQRS, MongoDB)",
   "author": "Kedein Rodriguez",
@@ -23,7 +23,7 @@
     "check": "npm run lint && npm run typecheck && npm test && npm run build",
     "infra:up": "docker compose up -d --wait mongo",
     "infra:down": "docker compose down",
-    "seed": "docker compose exec -T mongo mongosh --quiet ligo --eval \"$(cat scripts/seed.mongodb.js)\"",
+    "seed": "docker compose exec -T mongo mongosh --quiet wallet --eval \"$(cat scripts/seed.mongodb.js)\"",
     "prepare": "husky",
     "start:dev:pretty": "nest start --watch | scripts/pretty-logs.sh",
     "logs": "docker compose logs -f --no-log-prefix api | scripts/pretty-logs.sh"

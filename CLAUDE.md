@@ -1,4 +1,4 @@
-# Engineering rules for the AI agent (Ligo Cash-In challenge)
+# Engineering rules for the AI agent (Wallet Cash-In challenge)
 
 This file is the spec every coding session starts from. It is versioned on purpose: it is part of
 how the agent was piloted (see `docs/ai-log.md` and the "Use of AI" section of the README).

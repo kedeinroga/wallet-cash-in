@@ -9,7 +9,7 @@ this plan; `CLAUDE.md` governs how the code is written.
 
 ## 1. Problem
 
-Ligo's app tops up a user's wallet by charging an external payment provider. We build the Cash-In
+A digital wallet app tops up a user's wallet by charging an external payment provider. We build the Cash-In
 service: `POST /cash-in` charges the provider and credits the wallet; `POST /webhooks/payment`
 receives the provider's asynchronous notifications. The hard part is not the happy path but
 guaranteeing that **a user is charged at most once and credited exactly once per operation**
@@ -675,12 +675,12 @@ an `AppConfigService` getter, `.env.example`, `k8s/configmap.yaml` or `k8s/secre
 bound in the module with `useFactory` from `AppConfigService` (same pattern as
 `DependencyHealthChecks`, `infrastructure.module.ts:25`).
 
-E2E env (`vitest.config.e2e.ts` `test.env`): `MONGO_DB=ligo_e2e`, `PROVIDER_TIMEOUT_MS=1000`
+E2E env (`vitest.config.e2e.ts` `test.env`): `MONGO_DB=wallet_e2e`, `PROVIDER_TIMEOUT_MS=1000`
 (so `card_slow` stays in flight 500 ms: a real window for the concurrent and early webhook tests),
 `OPERATION_LEASE_MS=4000` (passes the lease rule: 4000 > 1000 * 3 + 100 * 2), `RECONCILER_ENABLED=false`,
 `RECONCILER_MIN_AGE_MS=0`, `RETRY_BASE_DELAY_MS=10`, `RETRY_MAX_DELAY_MS=100`,
 `THROTTLE_LIMIT=10000` (the per pod limiter must not turn bursts of test requests into 429).
-Also `test.fileParallelism: false`: e2e files share `ligo_e2e`, and the reconciler test claims any
+Also `test.fileParallelism: false`: e2e files share `wallet_e2e`, and the reconciler test claims any
 stale pending operation.
 
 `docker-compose.yml` runs the api with `NODE_ENV=production`, so the production secret rule would
@@ -765,7 +765,7 @@ Each step ends with `npm run check` green and one commit with the given message.
 - `CLAUDE.md` section 2: add `decorators/` and `guards/` under the module `api/` folder (context specific param decorators and guards), so the spec matches the tree.
 - `src/modules/cash-in/api/dto/cash-in.request.dto.ts`, `dto/cash-in.response.dto.ts`, `mappers/cash-in.response.mapper.ts`.
 - `src/modules/cash-in/api/cash-in.controller.ts` (+ `cash-in.controller.spec.ts`).
-- `test/cash-in.e2e-spec.ts`. `scripts/seed.mongodb.js` + `package.json` script `"seed": "docker compose exec -T mongo mongosh --quiet ligo --eval \"$(cat scripts/seed.mongodb.js)\""` (`updateOne({ _id: 'usr_abc123' }, { $setOnInsert: { currency: 'PEN', balanceMinor: NumberLong(25000), version: 0, createdAt, updatedAt } }, { upsert: true })`: re-running never resets a live balance or version).
+- `test/cash-in.e2e-spec.ts`. `scripts/seed.mongodb.js` + `package.json` script `"seed": "docker compose exec -T mongo mongosh --quiet wallet --eval \"$(cat scripts/seed.mongodb.js)\""` (`updateOne({ _id: 'usr_abc123' }, { $setOnInsert: { currency: 'PEN', balanceMinor: NumberLong(25000), version: 0, createdAt, updatedAt } }, { upsert: true })`: re-running never resets a live balance or version).
 
 **Step 7** `feat(cash-in): handle payment webhooks with signature and deduplication`
 - Config: `WEBHOOK_SIGNING_SECRET`, `WEBHOOK_TOLERANCE_SECONDS` (+ production rule, spec case, `k8s/secret.example.yaml`).

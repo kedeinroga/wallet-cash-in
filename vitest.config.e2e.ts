@@ -14,7 +14,7 @@ export default defineConfig({
     // Files share one database and the reconciler claims any stale pending operation.
     fileParallelism: false,
     env: {
-      MONGO_DB: 'ligo_e2e',
+      MONGO_DB: 'wallet_e2e',
       PROVIDER_TIMEOUT_MS: '1000',
       OPERATION_LEASE_MS: '4000',
       RECONCILER_ENABLED: 'false',

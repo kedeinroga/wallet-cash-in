@@ -6,7 +6,7 @@ services:
     environment:
       NODE_ENV: production
       MONGO_URI: mongodb://mongo:27017/?replicaSet=rs0
-      MONGO_DB: ligo
+      MONGO_DB: wallet
       SWAGGER_ENABLED: "true" # demo only; production default is off
       WEBHOOK_SIGNING_SECRET: compose-demo-webhook-signing-secret # demo only; a real one comes from a secret manager
     depends_on:

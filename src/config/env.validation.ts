@@ -26,7 +26,7 @@ export class EnvironmentVariables {
   MONGO_URI = 'mongodb://localhost:27017/?replicaSet=rs0&directConnection=true';
 
   @IsString()
-  MONGO_DB = 'ligo';
+  MONGO_DB = 'wallet';
 
   /** Fail fast when Mongo is unreachable (driver default is 30s). */
   @IsInt()

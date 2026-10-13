@@ -14,8 +14,8 @@ minutes.
 
 ## Sources (read all before judging)
 
-1. `../challenge-statement.md` (transcription; the PDF `../Challengue-Backend-Senior.pdf` wins if
-   they differ). The statement wins over everything.
+1. The original challenge statement, as provided by the user in the session. The statement wins
+   over everything.
 2. The plan given as argument (default `docs/plans/PLAN.md`), including its "Implementation log".
 3. `CLAUDE.md` (sections 5 and 11 above all), `README.md`, `docs/ai-log.md`.
 4. `git log --oneline` and `git status`. Audit `HEAD`; if the tree is dirty, say so in the report.
@@ -39,7 +39,7 @@ report it as a gate defect and propose the fix to the user.
 Record counts (files, tests, duration) and any skipped or `.only` test
 (`grep -rnE "\.(skip|only)\(|\bxit\(|\bxdescribe\(" src test` must be empty).
 
-### 3. Statement traceability (what Ligo evaluates)
+### 3. Statement traceability (what the challenge evaluates)
 
 Build one table per block; each row needs code `path:line` **and** a test name that exists
 (`grep -rn "<test name>" src test`) **and** ran green in step 2.
